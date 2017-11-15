@@ -14,7 +14,6 @@ class Platform
 		rect(this.x,this.y,this.width,this.height);
 	}
 }
-
 class Hero{
 	constuctor()
 	{
@@ -49,19 +48,18 @@ class Hero{
 		}
 	}
 }
-
 function setup()
 {
 	createCanvas(1600,900);
 	let x = 100;
 	let y = 100;
 	let width = 200;
-	bob = new Platform(x,y,width);
+	platform1 = new Platform(x,y,width);
 	player = new Hero();
 }
 
 function draw()
 {
 	player.show();
-	bob.show();
+	platform1.show();
 }
