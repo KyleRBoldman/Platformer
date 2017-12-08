@@ -40,12 +40,12 @@ class Hero{
 		this.velocityx = 0;
 		this.velocityy = 0;
 		this.playerState = "Air";
-		this.terminalVelocity = 20;
+		this.terminalVelocityY = 20;
+		this.terminalVelocityX = 10;
 	}
 	show()
 	{
-		ellipse(this.x,this.y,this.width,this.height);
-		image(mario1,this.x-7,this.y-10,13,20);
+		image(mario1,this.x-10,this.y-25,20,35);
 	}
 	
 	touchingPlat()
@@ -61,14 +61,41 @@ class Hero{
 	}
 	move()
 	{
+		if(keyIsDown(32))
+		{
+			this.terminalVelocityX = 15;
+		}
+		else
+		{
+			this.terminalVelocityX = 10;
+		}
+		
 		if(keyIsDown(RIGHT_ARROW))
 		{
-			if(this.velocityx < this.terminalVelocity/2)
+			if(keyIsDown(32))
+			{
+				this.terminalVelocityX = 15;
+			}
+			else
+			{
+				this.terminalVelocityX = 10;
+			}
+			
+			if(this.velocityx < this.terminalVelocityX)
 			this.velocityx += gravity;
 		}
 		else if(keyIsDown(LEFT_ARROW))
 		{
-			if(this.velocityx > (this.terminalVelocity * -1)/2)
+			if(keyIsDown(32))
+			{
+				this.terminalVelocityX = 15;
+			}
+			else
+			{
+				this.terminalVelocityX = 10;
+			}
+			
+			if(this.velocityx > this.terminalVelocityX * -1)
 			this.velocityx -= gravity;
 		}
 		else
@@ -88,6 +115,16 @@ class Hero{
 		}
 		this.x += this.velocityx;
 		
+		if(player.y > height)
+		{
+			score --;
+			player.y = 0;
+		}
+		if(this.x < 5)
+		{
+			this.x = 5;
+		}
+		
 		if(this.touchingPlat())
 		{
 			this.velocityy = 0;
@@ -96,8 +133,8 @@ class Hero{
 		else
 		{
 			this.velocityy += gravity;
-			if(this.velocityy > this.terminalVelocity)
-				this.velocityy = this.terminalVelocity;
+			if(this.velocityy > this.terminalVelocityY)
+				this.velocityy = this.terminalVelocityY;
 			
 			this.playerState = "Air";
 		}
@@ -107,32 +144,20 @@ class Hero{
 			this.velocityy = -17;
 		}
 		this.y += this.velocityy;
-		ivefallenandicantgetup();
-	}
-}
-
-function sideScrolling()
-{
-	if(player.x > (3/8) * width)
-	{
-		for(let i = 0; i < platforms.length; i++)
+	
+		if(this.x > (3/8) * width)
 		{
-			platforms[i].x -= player.velocityx;
-			if(platforms[i].x + width < player.x - (width * (3/8)))
+			for(let i = 0; i < platforms.length; i++)
 			{
-				platforms[i].x = random(width * 2) + player.x + (width * (5/8));
-				platforms[i].y = random(height);
+				platforms[i].x -= player.velocityx;
+				if(platforms[i].x + width < player.x - (width * (3/8)))
+				{
+					platforms[i].x = random(width * 2) + this.x + (width * (5/8));
+					platforms[i].y = random(height);
+				}
 			}
+			this.x -= this.velocityx;
 		}
-		player.x -= player.velocityx;
-	}
-}
-function ivefallenandicantgetup()
-{
-	if(player.y > height)
-	{
-		score --;
-		player.y = 0;
 	}
 }
 function setup()
@@ -147,10 +172,9 @@ function setup()
 
 function draw()
 {
-	background(bg);
+	background("Black");
 	text(score,10,10);
 	player.move();
-	sideScrolling();
 	player.show();
 	for(let i = 0; i < platforms.length; i++)
 	{
