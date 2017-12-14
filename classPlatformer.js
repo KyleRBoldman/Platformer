@@ -11,6 +11,18 @@ let player;
 let score = 0;
 let gravity = .5;
 
+class Coin
+{
+	constructor(i)
+	{
+		this.i = i;
+		this.width = 20;
+		this.height = 30;
+		this.x = platforms[i].x + random(platforms[i].width);
+		this.y = platforms[i].y + (this.height + 10);
+	}
+}
+
 class Platform
 {
 	constructor(x,y,w)
@@ -18,7 +30,7 @@ class Platform
 		this.x = x;
 		this.y = y;
 		this.width = w;
-		this.height = 100;
+		this.height = 50;
 	}
 	show()
 	{
@@ -35,8 +47,8 @@ class Hero{
 	{
 		this.x = 75;
 		this.y = 70;
-		this.width = 10;
-		this.height = 20;
+		this.width = 25;
+		this.height = 40;
 		this.velocityx = 0;
 		this.velocityy = 0;
 		this.playerState = "Air";
@@ -45,9 +57,9 @@ class Hero{
 	}
 	show()
 	{
-		image(mario1,this.x-10,this.y-25,20,35);
+		image(mario1,this.x-this.width/2,this.y-this.height/2 - 5,20,35);
 	}
-	
+
 	touchingPlat()
 	{
 		for(let i = 0; i < platforms.length; i++)
@@ -69,7 +81,7 @@ class Hero{
 		{
 			this.terminalVelocityX = 10;
 		}
-		
+
 		if(keyIsDown(RIGHT_ARROW))
 		{
 			if(keyIsDown(32))
@@ -80,7 +92,7 @@ class Hero{
 			{
 				this.terminalVelocityX = 10;
 			}
-			
+
 			if(this.velocityx < this.terminalVelocityX)
 			this.velocityx += gravity;
 		}
@@ -94,7 +106,7 @@ class Hero{
 			{
 				this.terminalVelocityX = 10;
 			}
-			
+
 			if(this.velocityx > this.terminalVelocityX * -1)
 			this.velocityx -= gravity;
 		}
@@ -102,11 +114,11 @@ class Hero{
 		{
 			if(this.velocityx < 0)
 				this.velocityx += gravity;
-		
+
 			else if(this.velocityx > 0)
 			{
 				this.velocityx -= gravity;
-			
+
 			}
 			if(this.velocityx < 1 && this.velocityx > -1)
 			{
@@ -114,7 +126,7 @@ class Hero{
 			}
 		}
 		this.x += this.velocityx;
-		
+
 		if(player.y > height)
 		{
 			score --;
@@ -124,7 +136,7 @@ class Hero{
 		{
 			this.x = 5;
 		}
-		
+
 		if(this.touchingPlat())
 		{
 			this.velocityy = 0;
@@ -135,16 +147,16 @@ class Hero{
 			this.velocityy += gravity;
 			if(this.velocityy > this.terminalVelocityY)
 				this.velocityy = this.terminalVelocityY;
-			
+
 			this.playerState = "Air";
 		}
-		
+
 		if(keyIsDown(UP_ARROW) && this.playerState == "Ground")
 		{
 			this.velocityy = -17;
 		}
 		this.y += this.velocityy;
-	
+
 		if(this.x > (3/8) * width)
 		{
 			for(let i = 0; i < platforms.length; i++)
@@ -152,8 +164,7 @@ class Hero{
 				platforms[i].x -= player.velocityx;
 				if(platforms[i].x + width < player.x - (width * (3/8)))
 				{
-					platforms[i].x = random(width * 2) + this.x + (width * (5/8));
-					platforms[i].y = random(height);
+					platforms[i].x = random(windowWidth * 2) + this.x + (windowWidth * (5/8));
 				}
 			}
 			this.x -= this.velocityx;
@@ -162,10 +173,10 @@ class Hero{
 }
 function setup()
 {
-	createCanvas(1600,900);
+	createCanvas(windowWidth - 20,windowHeight - 20);
 	for(let i = 0; i < 10; i++)
 	{
-		platforms.push(new Platform(random(width * 2),random(height),random(200,400)));
+		platforms.push(new Platform(random(windowWidth * 2),i * (windowHeight/10) + 100,random(200,400)));
 	}
 	player = new Hero();
 }
