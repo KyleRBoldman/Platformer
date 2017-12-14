@@ -1,10 +1,19 @@
 let bg;
-let mario1;
+let marioImages = [];
+let marioImagesL = [];
 
 function preload()
 {
 	bg = loadImage("https://vignette.wikia.nocookie.net/nintendo/images/2/2c/Super_Mario_Bros_3_%28Title_Screen%29.png/revision/latest?cb=20120107012312&path-prefix=en");
-	mario1 = loadImage("https://vignette.wikia.nocookie.net/mario/images/e/e4/Mario_Sprite.jpg/revision/latest?cb=20130828225140");
+	plat = loadImage("https://cdn.glitch.com/b6660e28-e32a-4119-bc13-1e0c5f4850b1%2Fplatform.png?1513274817371");
+	marioImages[0] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario1.png?1513275452076");
+	marioImagesL[0] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario1L.png?1513275457282");
+	marioImages[1] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario2.png?1513275464324");
+	marioImagesL[1] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario2L.png?1513275469766");
+	marioImages[2] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario3.png?1513275473943");
+	marioImagesL[2] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario3L.png?1513275477547");
+	marioImages[3] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2FmarioJ.png?1513275481401");
+	marioImagesL[3] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2FmarioJL.png?1513275484720");
 }
 let platforms = [];
 let player;
@@ -34,8 +43,7 @@ class Platform
 	}
 	show()
 	{
-		fill("Red");
-		rect(this.x,this.y,this.width,this.height);
+		image(plat,this.x,this.y,this.width,this.height);
 	}
 	contains(givenX,givenY)
 	{
@@ -54,10 +62,20 @@ class Hero{
 		this.playerState = "Air";
 		this.terminalVelocityY = 20;
 		this.terminalVelocityX = 10;
+		this.faceState = "Right";
+		this.marioImage = marioImages[0];
+		this.i;
 	}
 	show()
 	{
-		image(mario1,this.x-this.width/2,this.y-this.height/2 - 5,20,35);
+		if(this.playerState == "Air")
+		if(this.faceState == "Right")
+			this.marioImage = marioImages[this.i];
+		
+		else if(this.faceState == "Left")
+			this.marioImage = marioImagesL[this.i];
+		
+		image(this.marioImage,this.x-this.width/2,this.y-this.height/2 - 5,20,35);
 	}
 
 	touchingPlat()
@@ -71,47 +89,30 @@ class Hero{
 			}
 		}
 	}
+	iterateI()
+	{
+		this.i++;
+		if(this.i >= 2)
+			this.i = 0;
+	}
 	move()
 	{
-		if(keyIsDown(32))
-		{
-			this.terminalVelocityX = 15;
-		}
-		else
-		{
-			this.terminalVelocityX = 10;
-		}
-
 		if(keyIsDown(RIGHT_ARROW))
 		{
-			if(keyIsDown(32))
-			{
-				this.terminalVelocityX = 15;
-			}
-			else
-			{
-				this.terminalVelocityX = 10;
-			}
-
+			this.iterateI();
 			if(this.velocityx < this.terminalVelocityX)
 			this.velocityx += gravity;
 		}
 		else if(keyIsDown(LEFT_ARROW))
 		{
-			if(keyIsDown(32))
-			{
-				this.terminalVelocityX = 15;
-			}
-			else
-			{
-				this.terminalVelocityX = 10;
-			}
-
+			this.faceState = "Left";
+			this.iterateI();
 			if(this.velocityx > this.terminalVelocityX * -1)
 			this.velocityx -= gravity;
 		}
 		else
 		{
+			this.i = 0;
 			if(this.velocityx < 0)
 				this.velocityx += gravity;
 
