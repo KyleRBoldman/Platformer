@@ -1,6 +1,11 @@
 let bg;
 let marioImages = [];
 let marioImagesL = [];
+let platforms = [];
+let coins = [];
+let player;
+let score = 0;
+let gravity = .5;
 
 function preload()
 {
@@ -10,11 +15,12 @@ function preload()
 	marioImagesL[0] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario1L.png?1513275457282");
 	marioImages[1] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2FmarioJ.png?1513275481401");
 	marioImagesL[1] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2FmarioJL.png?1513275484720");
+	marioImages[2] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario3.png?1513275473943");
+	marioImagesL[2] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2Fmario3L.png?1513275477547");
+	marioImages[3] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2FmarioJ.png?1513275481401");
+	marioImagesL[3] = loadImage("https://cdn.glitch.com/7df22413-2962-42d5-be3d-39cd5e8db245%2FmarioJL.png?1513275484720");
+	coin = loadImage("https://cdn.glitch.com/330aa154-ae81-48db-bdc8-263ede3941c1%2Fcoin.png?1513548530867");
 }
-let platforms = [];
-let player;
-let score = 0;
-let gravity = .5;
 
 class Coin
 {
@@ -25,6 +31,10 @@ class Coin
 		this.height = 30;
 		this.x = platforms[i].x + random(platforms[i].width);
 		this.y = platforms[i].y + (this.height + 10);
+	}
+	show()
+	{
+		image(coin,this.x,this.y,this.width,this.height);
 	}
 }
 
@@ -46,6 +56,7 @@ class Platform
 		return givenX > this.x && givenX < this.x + this.width && givenY > this.y && givenY < this.y + this.height;
 	}
 }
+
 class Hero{
 	constructor()
 	{
@@ -168,6 +179,7 @@ function setup()
 	for(let i = 0; i < 10; i++)
 	{
 		platforms.push(new Platform(random(windowWidth * 2),i * (windowHeight/10) + 100,random(200,400)));
+		coins.push(new Coin(i));
 	}
 	player = new Hero();
 }
@@ -181,5 +193,6 @@ function draw()
 	for(let i = 0; i < platforms.length; i++)
 	{
 		platforms[i].show();
+		coins[i].show();
 	}
 }
