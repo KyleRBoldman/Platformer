@@ -4,6 +4,7 @@ let marioImagesL = [];
 let platforms = [];
 let coins = [];
 let player;
+let coin;
 let score = 0;
 let gravity = .5;
 let add = true;
